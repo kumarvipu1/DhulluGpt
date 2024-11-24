@@ -7,4 +7,5 @@ opencv-python
 langchain-core
 langchain-community
 langchain
+opencv-python
 
