@@ -1,0 +1,10 @@
+langchain-groq
+streamlit
+python-dotenv
+tavily-python
+numpy
+opencv-python
+langchain-core
+langchain-community
+langchain
+
