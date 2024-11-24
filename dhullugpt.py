@@ -6,6 +6,7 @@ import numpy as np
 from langchain_core.messages import HumanMessage, SystemMessage
 import os
 import base64
+from PIL import Image
 from io import BytesIO
 
 
@@ -61,16 +62,21 @@ if submit_button:
     
 st.markdown("---")
     
-st.markdown("### Camera input")
+st.markdown("### Image input")
 
-enable = st.checkbox("Enable camera")
-browse_gallery = st.checkbox("Browse gallery")
+source = st.radio("Source", options=["None", "Camera", "Gallery"])
 
-if enable:
-    picture = st.camera_input("Take a picture", disabled=not enable)
+if source == "Camera":
+    picture = st.camera_input("Take a picture", disabled=not source)
 
-if browse_gallery:
+if source == "Gallery":
     picture = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    
+
+llm_vision = ChatGroq(
+    api_key=os.getenv("GROQ_API_KEY"),
+    model_name="llama-3.2-11b-vision-preview"  # You can change the model as needed
+)
     
 
 
@@ -78,6 +84,46 @@ if browse_gallery:
 image_prompt = st.text_input("Enter a prompt for the image")
 
 submit_button_two = st.button("Submit image query")
+
+if source == "Camera" and submit_button_two:
+    
+    if picture:
+        img = Image.open(picture)
+        buffered = BytesIO()
+        img.save(buffered, format="jpeg")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+        
+        message = HumanMessage(
+    content=[
+        {"type": "text", "text": str(image_prompt)},
+        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_str}"}},
+            ],
+        )
+        response = llm_vision.invoke([message])
+        st.markdown(response.content)
+    else:
+        st.write("Please upload an image")
+
+if source == "Gallery" and submit_button_two:
+    st.image(picture)
+    if picture:
+        image_data = picture.getvalue()
+        base64_image = base64.b64encode(image_data).decode()
+        message = HumanMessage(
+            content=[
+                {"type": "text", "text": image_prompt},
+                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}},
+            ],
+        )
+        
+        response = llm_vision.invoke([message])
+        st.markdown(response.content)
+    else:
+        st.write("Please upload an image")
+
+    
+    
+    
 
     
 
