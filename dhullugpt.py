@@ -81,7 +81,7 @@ llm_vision = ChatGroq(
 
 
 
-image_prompt = st.text_input("Enter a prompt for the image")
+image_prompt = st.text_input("Enter a question about the image")
 
 submit_button_two = st.button("Submit image query")
 
