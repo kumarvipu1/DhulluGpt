@@ -31,6 +31,12 @@ llm = ChatGroq(
 
 tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 
+# Only display chat history if there are messages
+if st.session_state.messages and st.session_state.user_input:
+    for user_input, response in zip(st.session_state.user_input, st.session_state.messages):
+        st.write(f"User: {user_input}")
+        st.write(f"Response: {response.content}")
+
 
 user_input = st.text_input("What would you like to know?")
 submit_button = st.button("Submit")
@@ -48,10 +54,10 @@ if submit_button:
     response = llm.invoke(messages)
     
     st.session_state.messages.append(response)
+    st.markdown(response.content)
     
-    for user_input, response in zip(st.session_state.user_input, st.session_state.messages):
-        st.write(f"User: {user_input}")
-        st.write(f"Response: {response.content}")
+    
+
     
 st.markdown("---")
     
