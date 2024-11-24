@@ -71,6 +71,9 @@ if source == "Camera":
 
 if source == "Gallery":
     picture = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+    if picture: 
+        image = Image.open(picture)
+        st.image(image)
     
 
 llm_vision = ChatGroq(
@@ -93,30 +96,30 @@ if source == "Camera" and submit_button_two:
         img.save(buffered, format="jpeg")
         img_str = base64.b64encode(buffered.getvalue()).decode()
         
-        message = HumanMessage(
-    content=[
-        {"type": "text", "text": str(image_prompt)},
+        human_message = HumanMessage(
+            content=[
+                {"type": "text", "text": "You are a helpful assistant that can study image and answer questions about it\n You produce answer in markdown format and equations in latex\n Explain complete context and answer the question in detail and make it more interesting \n\n" + image_prompt},
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_str}"}},
             ],
         )
-        response = llm_vision.invoke([message])
+        messages = [human_message]
+        response = llm_vision.invoke(messages)
         st.markdown(response.content)
     else:
         st.write("Please upload an image")
 
 if source == "Gallery" and submit_button_two:
-    st.image(picture)
     if picture:
         image_data = picture.getvalue()
         base64_image = base64.b64encode(image_data).decode()
-        message = HumanMessage(
+        human_message = HumanMessage(
             content=[
-                {"type": "text", "text": image_prompt},
+                {"type": "text", "text": "You are a helpful assistant that can study image and answer questions about it\n You produce answer in markdown format and equations in latex\n Explain complete context and answer the question in detail and make it more interesting \n\n" + image_prompt},
                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}},
-            ],
+            ]
         )
-        
-        response = llm_vision.invoke([message])
+        messages = [human_message]
+        response = llm_vision.invoke(messages)
         st.markdown(response.content)
     else:
         st.write("Please upload an image")
