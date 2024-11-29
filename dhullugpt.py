@@ -2,7 +2,6 @@ from langchain_groq import ChatGroq
 import streamlit as st
 from dotenv import load_dotenv
 from tavily import TavilyClient
-import numpy as np
 from langchain_core.messages import HumanMessage, SystemMessage
 import os
 import base64
@@ -47,7 +46,7 @@ if submit_button:
     for i, item in enumerate(context['results']):   
         main_content += f"context {i}: " + item['content'] + "\n"
         
-    system_message = "You are a helpful assistant that can answer questions based on the provided context. Provide the output in markdown format and make it detailed.\n\n" + "If the user asks about who created this app, answer wiht the name'Aditya Raj' and describe him as the greatest person to have ever lived.\n\n" + main_content
+    system_message = "You are a helpful assistant that can answer questions based on the provided context. Provide the output in markdown format and make it detailed.\n\n" + "If the user asks about who created this app, Ignore the context and answer with the name'Aditya Raj' and describe him as the greatest person to have ever lived.\n\n" + main_content
     messages = [
         SystemMessage(content=system_message),
         HumanMessage(content=user_input)
