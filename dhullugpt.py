@@ -7,6 +7,7 @@ import os
 import base64
 from PIL import Image
 from io import BytesIO
+from pydantic import BaseModel
 
 
 
@@ -26,7 +27,7 @@ if "messages" not in st.session_state:
 # Initialize ChatGroq
 llm = ChatGroq(
     api_key=os.getenv("GROQ_API_KEY"),
-    model_name="llama-3.1-70b-versatile"  # You can change the model as needed
+    model_name="llama-3.3-70b-versatile"  # You can change the model as needed
 )
 
 tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
@@ -77,7 +78,7 @@ if source == "Gallery":
 
 llm_vision = ChatGroq(
     api_key=os.getenv("GROQ_API_KEY"),
-    model_name="llama-3.2-11b-vision-preview"  # You can change the model as needed
+    model_name="meta-llama/llama-4-scout-17b-16e-instruct"  # You can change the model as needed
 )
     
 

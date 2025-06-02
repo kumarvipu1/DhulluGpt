@@ -7,4 +7,5 @@ langchain-core
 langchain-community
 langchain
 pillow
+pydantic
 
