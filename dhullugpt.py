@@ -223,12 +223,13 @@ if source == "Camera" and submit_button_two:
         
         human_message = HumanMessage(
             content=[
-                {"type": "text", "text": "You are a helpful assistant that can study image and answer questions about it\n You produce answer in markdown format and equations in latex\n Explain complete context and answer the question in detail and make it more interesting \n\n" + image_prompt},
+                {"type": "text", "text": "You are a helpful assistant that can study image and answer questions about it\n You produce answer in markdown format and if the image appears to be maths equation, produce equations in markdown compatible latex\n Explain complete context and answer the question in detail and make it more interesting \n\n" + image_prompt},
         {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_str}"}},
             ],
         )
         messages = [human_message]
-        response = llm_vision.invoke(messages)
+        with st.spinner("Generating response..."):
+            response = llm_vision.invoke(messages)
         st.markdown(response.content)
     else:
         st.write("Please upload an image")
@@ -244,7 +245,8 @@ if source == "Gallery" and submit_button_two:
             ]
         )
         messages = [human_message]
-        response = llm_vision.invoke(messages)
+        with st.spinner("Generating response..."):
+            response = llm_vision.invoke(messages)
         st.markdown(response.content)
     else:
         st.write("Please upload an image")
